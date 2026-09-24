@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-// ── Core WhatsApp Dark Palette (from wb-ui-clone, extended) ──────────────
-const Color waBlack         = Color(0xFF0B0E10);   // deepest background
-const Color waDarkGrey      = Color(0xFF111B21);   // chat/scaffold background
-const Color waHeaderGrey    = Color(0xFF1F2C34);   // app bar / header
-const Color waChatBg        = Color(0xFF0D1417);   // chat screen background
-const Color waInputBg       = Color(0xFF1F2C34);   // message input bar
+// ── Core WhatsApp Light Palette (white surfaces, greens unchanged) ─────────
+const Color waBlack         = Color(0xFF0B0E10);   // deepest background (kept for API compat)
+const Color waDarkGrey      = Color(0xFFFFFFFF);   // main/scaffold background → white
+const Color waHeaderGrey    = Color(0xFFFFFFFF);   // app bar / header → white
+const Color waChatBg        = Color(0xFFEFEAE2);   // chat screen background (authentic WA light chat wallpaper)
+const Color waInputBg       = Color(0xFFFFFFFF);   // message input bar → white
 const Color waGreen         = Color(0xFF00A884);   // primary accent (new WA green)
-const Color waGreenDark     = Color(0xFF005C4B);   // outgoing bubble
+const Color waGreenDark     = Color(0xFFD9FDD3);   // outgoing bubble (WA light green; greens untouched)
 const Color waGreenLight    = Color(0xFF00A884);   // FAB / active
 const Color waTeal          = Color(0xFF128C7E);   // secondary
-const Color waWhite         = Color(0xFFE9EDEF);   // primary text
-const Color waGrey          = Color(0xFF8696A0);   // secondary text / metadata
-const Color waLightGrey     = Color(0xFF2A3942);   // incoming bubble
-const Color waDivider       = Color(0xFF222D35);   // divider lines
+const Color waWhite         = Color(0xFF111B21);   // primary text → near-black (readable on white)
+const Color waGrey          = Color(0xFF667781);   // secondary text / metadata (WA light grey)
+const Color waLightGrey     = Color(0xFFFFFFFF);   // incoming bubble → white
+const Color waDivider       = Color(0xFFE9EDEF);   // divider lines → light
 const Color waVerifiedBlue  = Color(0xFF34B7F1);   // ✓ badge
-const Color waSystemMsg     = Color(0xFF8696A0);   // system message text
-const Color waSystemBg      = Color(0xFF1F2C34);   // system message background
+const Color waSystemMsg     = Color(0xFF54656F);   // system message text (WA light)
+const Color waSystemBg      = Color(0xFFFFF3C9);   // system message background (WA light yellow pill)
 const Color waAgentOrange   = Color(0xFFFFB300);   // agent request badge
 const Color waDelivered     = Color(0xFF53BDEB);   // double-tick delivered
 const Color waRead          = Color(0xFF53BDEB);   // double-tick read
@@ -55,10 +55,10 @@ const TextStyle tsBubble = TextStyle(
 
 // ── ThemeData factory ─────────────────────────────────────────────────────
 ThemeData buildWhatsAppTheme() {
-  return ThemeData.dark().copyWith(
+  return ThemeData.light().copyWith(
     scaffoldBackgroundColor: waDarkGrey,
     primaryColor: waGreen,
-    colorScheme: const ColorScheme.dark(
+    colorScheme: const ColorScheme.light(
       primary: waGreen,
       secondary: waTeal,
       surface: waHeaderGrey,

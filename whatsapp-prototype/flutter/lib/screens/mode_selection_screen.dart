@@ -26,6 +26,13 @@ class ModeSelectionScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: waGreen,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: waGreen.withOpacity(0.3),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: const Icon(Icons.chat, color: Colors.white, size: 40),
               ),
@@ -121,8 +128,10 @@ class _ModeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: waHeaderGrey,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(16),
+      elevation: 1,
+      shadowColor: Colors.black.withOpacity(0.08),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
@@ -148,10 +157,10 @@ class _ModeCard extends StatelessWidget {
                         Text(title, style: const TextStyle(
                             color: waWhite, fontSize: 16, fontWeight: FontWeight.w600)),
                         const SizedBox(width: 8),
-                        Container(
+                    Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: iconBg.withOpacity(0.2),
+                            color: iconBg.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(badge, style: TextStyle(

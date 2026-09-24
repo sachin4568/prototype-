@@ -46,7 +46,7 @@ class MessageBubble extends StatelessWidget {
                     child: Text(
                       _senderLabel,
                       style: const TextStyle(
-                          color: waGreen, fontSize: 11, fontWeight: FontWeight.w600),
+                          color: waTeal, fontSize: 11, fontWeight: FontWeight.w600),
                     ),
                   ),
 
@@ -61,6 +61,13 @@ class MessageBubble extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isOut ? waGreenDark : waLightGrey,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
                     borderRadius: BorderRadius.only(
                       topLeft:     const Radius.circular(10),
                       topRight:    const Radius.circular(10),
@@ -75,6 +82,19 @@ class MessageBubble extends StatelessWidget {
                       children: [
                         // Message text (supports *bold* markdown-style)
                         _FormattedText(text: message.text),
+
+                        // Interactive list menu — embedded inside the bubble,
+                        // one feature per line (WhatsApp Business style)
+                        if (message.options.isNotEmpty && !isOut) ...[
+                          const SizedBox(height: 6),
+                          if (onOptionTap != null)
+                            _OptionButtons(
+                              options: message.options,
+                              onTap: onOptionTap!,
+                            )
+                          else
+                            _OptionButtons.readOnly(options: message.options),
+                        ],
 
                         // Timestamp + status row
                         const SizedBox(height: 4),
@@ -99,12 +119,6 @@ class MessageBubble extends StatelessWidget {
                   ),
                 ),
 
-                // Option buttons (below the bubble)
-                if (message.options.isNotEmpty && !isOut && onOptionTap != null)
-                  _OptionButtons(
-                    options: message.options,
-                    onTap: onOptionTap!,
-                  ),
               ],
             ),
           ),
@@ -155,38 +169,54 @@ class _SystemMessage extends StatelessWidget {
 class _OptionButtons extends StatelessWidget {
   final List<ChatOption> options;
   final void Function(ChatOption) onTap;
+  final bool enabled;
 
-  const _OptionButtons({required this.options, required this.onTap});
+  const _OptionButtons({
+    required this.options,
+    required this.onTap,
+    this.enabled = true,
+  });
+
+  /// Read-only variant for views that cannot reply (e.g. agent transcript).
+  factory _OptionButtons.readOnly({required List<ChatOption> options}) =>
+      _OptionButtons(options: options, onTap: (_) {}, enabled: false);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 6, bottom: 2),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 6,
-        children: options.map((opt) {
-          return InkWell(
-            onTap: () => onTap(opt),
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: waLightGrey,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: waGreen.withOpacity(0.5), width: 1),
-              ),
-              child: Text(
-                opt.label,
-                style: const TextStyle(
-                  color: waGreen,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+      padding: const EdgeInsets.only(top: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < options.length; i++) ...[
+            if (i > 0)
+              const Divider(height: 1, thickness: 0.7, color: waDivider, indent: 12, endIndent: 12),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: enabled ? () => onTap(options[i]) : null,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          options[i].label,
+                          style: const TextStyle(
+                            color: waTeal,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right, size: 18, color: waGrey),
+                    ],
+                  ),
                 ),
               ),
             ),
-          );
-        }).toList(),
+          ],
+        ],
       ),
     );
   }

@@ -105,6 +105,8 @@ class _ChatScreenState extends State<ChatScreen> {
       _messages.add(userMsg);
       _botTyping = true;
       _sending   = true;
+      // Deactivate earlier menus — like WhatsApp, a list-reply can be used once
+      _deactivateMenus();
     });
     _scrollDown();
 
@@ -171,6 +173,23 @@ class _ChatScreenState extends State<ChatScreen> {
       _sending   = false;
     });
     _scrollDown();
+  }
+
+  /// Replaces option menus on older bot messages with their read-only form.
+  /// Mirrors real WhatsApp behaviour: an interactive list is single-use.
+  void _deactivateMenus() {
+    for (int i = 0; i < _messages.length; i++) {
+      final m = _messages[i];
+      if (m.options.isNotEmpty) {
+        _messages[i] = ChatMessage(
+          id: m.id, conversationId: m.conversationId,
+          senderId: m.senderId, senderType: m.senderType,
+          text: m.text, messageType: m.messageType,
+          status: m.status, options: const [],
+          timestamp: m.timestamp, isSystem: m.isSystem,
+        );
+      }
+    }
   }
 
   void _scrollDown() {
@@ -411,22 +430,22 @@ class _OfflineBanner extends StatelessWidget {
   const _OfflineBanner({required this.onRetry});
   @override
   Widget build(BuildContext context) => Container(
-        color: const Color(0xFF7B341E),
+        color: const Color(0xFFFFF3C9),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            const Icon(Icons.cloud_off, color: Colors.white, size: 16),
+            const Icon(Icons.cloud_off, color: Color(0xFF54656F), size: 16),
             const SizedBox(width: 8),
             const Expanded(
               child: Text(
                 'Cannot reach backend. Run: uvicorn app.main:app --reload (port 8000)',
-                style: TextStyle(color: Colors.white, fontSize: 11),
+                style: TextStyle(color: Color(0xFF54656F), fontSize: 11),
               ),
             ),
             TextButton(
                 onPressed: onRetry,
                 child: const Text('Retry',
-                    style: TextStyle(color: Colors.white, fontSize: 12))),
+                    style: TextStyle(color: waGreen, fontSize: 12))),
           ],
         ),
       );
